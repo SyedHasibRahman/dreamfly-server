@@ -4,8 +4,11 @@ const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const port = process.env.PORT || 5000;
+// const ObjectId = require('mongodb').ObjectId;
 
 app.use(cors());
+// app.use(express.json());
+// router.use(cors());
 
 // https://web.programming-hero.com/web-4/video/web-4-70-9-module-summary-and-database-connection 
 
@@ -18,6 +21,17 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
+
+        const database = client.db('DreamFly');
+        const blogCollection = database.collection('blogs');
+
+        // GET Product API
+        app.get('/blogs', async (req, res) => {
+            const cursor = blogCollection.find({});
+            const blogs = await cursor.toArray();
+            res.send(blogs);
+        })
+
         console.log('DB Connected');
     } finally {
         // await client.close();
