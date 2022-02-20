@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 // router.use(cors());
 
+// https://vast-retreat-08893.herokuapp.com/  | https://git.heroku.com/vast-retreat-08893.git
 
 //Conect MongoDB
 // https://web.programming-hero.com/web-4/video/web-4-70-9-module-summary-and-database-connection 
@@ -28,6 +29,7 @@ async function run() {
 
         const database = client.db('DreamFly');
         const blogsCollection = database.collection('blogs');
+        const userCollection = database.collection("users");
 
         // GET Blogs API
         app.get('/blogs', async (req, res) => {
@@ -58,15 +60,93 @@ async function run() {
         // });
 
         //GET Single blog
-        app.get('/blogs/:id', async(req, res) => {
+        app.get('/blogs/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: ObjectId(id)};
+            const query = { _id: ObjectId(id) };
             const blog = await blogsCollection.findOne(query);
             res.json(blog);
         });
 
 
-        console.log('DB Connected');
+        // console.log('DB Connected');
+        /* ========================= 
+        User Collection START 
+        ======================= */
+
+        // GET - All users
+        app.get("/users", async (req, res) => {
+            const cursor = userCollection.find({});
+            const users = await cursor.toArray();
+            res.json(users);
+        });
+
+        // POST - Save user info to user collection
+        app.post("/users", async (req, res) => {
+            const newUser = req.body;
+            const result = await userCollection.insertOne(newUser);
+            console.log(result);
+            res.json(result);
+        });
+
+        // PUT - Update user data to database for third party login system
+        app.put("/users", async (req, res) => {
+            const user = req.body;
+            console.log('put', user);
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        });
+
+        // Delete - Delete an user from DB
+        app.delete("/users/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await userCollection.deleteOne(query);
+            res.json({ _id: id, deletedCount: result.deletedCount });
+        });
+
+        // GET - Admin Status.
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await userCollection.findOne(query);
+            let isAdmin = false;
+            if (result?.role === "admin") {
+                isAdmin = true;
+                res.json({ admin: isAdmin });
+            } else {
+                res.json({ admin: isAdmin });
+            }
+        });
+
+        // PUT - Set an user role as admin
+        app.put("/make-admin/:id", async (req, res) => {
+            const filter = req.params.id;
+            const updateDoc = {
+                $set: {
+                    role: "admin",
+                },
+            };
+            const result = await userCollection.updateOne(
+                { email: filter },
+                updateDoc
+            );
+            res.json(result);
+            console.log(result);
+        });
+
+        app.get("/admins", async (req, res) => {
+            const cursor = userCollection.find({});
+            const users = await cursor.toArray();
+            res.json(users);
+        });
+
+        /* ========================= 
+        User Collection END 
+        ======================= */
+
     } finally {
         // await client.close();
     }
