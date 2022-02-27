@@ -256,6 +256,39 @@ async function run() {
       const users = await cursor.toArray();
       res.json(users);
     });
+        // PUT - Set an user role as admin
+
+
+        app.put('/users/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
+
+
+
+        /*         app.put("/make-admin/:id", async (req, res) => {
+                    const filter = req.params.id;
+                    const updateDoc = {
+                        $set: {
+                            role: "admin",
+                        },
+                    };
+                    const result = await userCollection.updateOne(
+                        { email: filter },
+                        updateDoc
+                    );
+                    res.json(result);
+                    console.log(result);
+                });
+        
+                app.get("/admins", async (req, res) => {
+                    const cursor = userCollection.find({});
+                    const users = await cursor.toArray();
+                    res.json(users);
+                }); */
 
     /* ========================= 
         User Collection END 
