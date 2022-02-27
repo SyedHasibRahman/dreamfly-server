@@ -288,6 +288,13 @@ async function run() {
       const flight = await cursor.toArray();
       res.json(flight);
     });
+
+    // get the flight data
+    app.get("/filter", async (req, res) => {
+      const cursor = flightCollection.find({});
+      const flight = await cursor.toArray();
+      res.json(flight);
+    });
     // filter by from to
     app.post("/filter", async (req, res) => {
       const query = req.body;
