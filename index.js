@@ -62,6 +62,38 @@ async function run() {
             res.json(result);
         });
 
+
+
+        //Delete package Api
+        app.delete('/tourPackages/:id', async (req, res) => {
+            const id = req.params.id;
+            const quary = { _id: ObjectId(id) };
+            const result = await tourCollection.deleteOne(quary);
+            res.json(result);
+        });
+
+        //updated package data
+        app.put('/tourPackages/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedservice = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    images: updatedservice.images,
+                    title: updatedservice.title,
+                    price: updatedservice.price,
+                    category: updatedservice.category,
+                    description: updatedservice.description,
+                    date: updatedservice.date,
+                    person: updatedservice.person
+                },
+            };
+            const result = await tourCollection.updateOne(filter, updateDoc, options)
+            console.log('updating user', req);
+            res.json(result)
+        })
+
         // POST Order API 
         app.post('/orders', async (req, res) => {
             const orders = req.body;
