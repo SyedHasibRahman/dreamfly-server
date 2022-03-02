@@ -431,7 +431,9 @@ async function run() {
     /* ========================= 
         User Collection END 
         ======================= */
-    // Payment 
+    /* ========================= 
+       Payment 
+       ======================= */
     app.post("/create-payment-intent", async (req, res) => {
       const paymentInfo = req.body;
       const amount = paymentInfo.price * 100;
