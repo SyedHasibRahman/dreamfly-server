@@ -109,26 +109,6 @@ async function run() {
       res.json(tourPackage);
     });
 
-    // //GET blogs API
-    // app.get('/blogs', async (req, res) => {
-    //     const cursor = blogsCollection.find({});
-    //     const page = req.query.page;
-    //     const size = parseInt(req.query.size);
-    //     let blogs;
-    //     const count = await cursor.count();
-
-    //     if (page) {
-    //         blogs = await cursor.skip(page * size).limit(size).toArray();
-    //     }
-    //     else {
-    //         blogs = await cursor.toArray();
-    //     }
-
-    //     res.send({
-    //         count,
-    //         blogs
-    //     });
-    // });
 
     //GET Single blog
     app.get("/blogs/:id", async (req, res) => {
@@ -155,24 +135,24 @@ async function run() {
     });
 
     //UPDATE Blog API
-    app.put("/blogs/:id", async (req, res) => {
-      const filter = { _id: ObjectId(req.params.id) };
-      console.log(req.params.id);
-      const result = await blogsCollection.updateMany(filter, {
-        $set: {
-          title: req.body.title,
-          fullTitle: req.body.fullTitle,
-          info: req.body.info,
-          description: req.body.description,
-          quote: req.body.quote,
-          quoteName: req.body.quoteName,
-          tag1: req.body.tag1,
-          tag2: req.body.tag2,
-        },
-      });
-      res.send(result);
-      console.log(result);
-    });
+    /*  app.put("/blogs/:id", async (req, res) => {
+       const filter = { _id: ObjectId(req.params.id) };
+       console.log(req.params.id);
+       const result = await blogsCollection.updateMany(filter, {
+         $set: {
+           title: req.body.title,
+           fullTitle: req.body.fullTitle,
+           info: req.body.info,
+           description: req.body.description,
+           quote: req.body.quote,
+           quoteName: req.body.quoteName,
+           tag1: req.body.tag1,
+           tag2: req.body.tag2,
+         },
+       });
+       res.send(result);
+       console.log(result);
+     }); */
 
     // ................ blog api end .............. //
 
@@ -231,59 +211,11 @@ async function run() {
     });
 
     // PUT - Update user data to database for third party login system
-    app.put("/users", async (req, res) => {
-      const user = req.body;
-      console.log("put", user);
-      const filter = { email: user.email };
-      const options = { upsert: true };
-      const updateDoc = { $set: user };
-      const result = await userCollection.updateOne(filter, updateDoc, options);
-      res.json(result);
-    });
 
-    // Delete - Delete an user from DB
-    app.delete("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const result = await userCollection.deleteOne(query);
-      res.json({ _id: id, deletedCount: result.deletedCount });
-    });
 
-    // GET - Admin Status.
-    app.get("/users/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email: email };
-      const result = await userCollection.findOne(query);
-      let isAdmin = false;
-      if (result?.role === "admin") {
-        isAdmin = true;
-        res.json({ admin: isAdmin });
-      } else {
-        res.json({ admin: isAdmin });
-      }
-    });
 
-    // PUT - Set an user role as admin
-    app.put("/make-admin/:id", async (req, res) => {
-      const filter = req.params.id;
-      const updateDoc = {
-        $set: {
-          role: "admin",
-        },
-      };
-      const result = await userCollection.updateOne(
-        { email: filter },
-        updateDoc
-      );
-      res.json(result);
-      console.log(result);
-    });
 
-    app.get("/admins", async (req, res) => {
-      const cursor = userCollection.find({});
-      const users = await cursor.toArray();
-      res.json(users);
-    });
+
     // PUT - Set an user role as admin
 
 
@@ -297,71 +229,18 @@ async function run() {
 
 
 
-    /*         app.put("/make-admin/:id", async (req, res) => {
-                const filter = req.params.id;
-                const updateDoc = {
-                    $set: {
-                        role: "admin",
-                    },
-                };
-                const result = await userCollection.updateOne(
-                    { email: filter },
-                    updateDoc
-                );
-                res.json(result);
-                console.log(result);
-            });
-    
-            app.get("/admins", async (req, res) => {
-                const cursor = userCollection.find({});
-                const users = await cursor.toArray();
-                res.json(users);
-            }); */
+
 
     /* ========================= 
         User Collection END 
         ======================= */
-    // Payment 
-    app.post("/create-payment-intent", async (req, res) => {
-      const paymentInfo = req.body;
-      const amount = paymentInfo.price * 100;
-      const paymentIntent = await stripe.paymentIntents.create({
-        // amount: calculateOrderAmount(items),
-        currency: "usd",
-        amount: amount,
-        payment_method_types: ['card']
-      });
-      res.json({
-        clientSecret: paymentIntent.client_secret,
-      });
-    })
 
 
-    app.get("/flight", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
 
-    // get the flight data
-    app.get("/filterFlight", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
 
-    // get the flight data
-    app.get("/filter", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
-    // filter by from to
-    app.post("/filter", async (req, res) => {
-      const query = req.body;
-      const result = await flightCollection.find(query).toArray();
-      res.json(result);
-    });
+
+
+
 
     // PUT - Update user data to database for third party login system
     app.put("/users", async (req, res) => {
@@ -417,16 +296,7 @@ async function run() {
       const users = await cursor.toArray();
       res.json(users);
     });
-    // PUT - Set an user role as admin
 
-
-    app.put('/users/admin', async (req, res) => {
-      const user = req.body;
-      const filter = { email: user.email };
-      const updateDoc = { $set: { role: 'admin' } };
-      const result = await userCollection.updateOne(filter, updateDoc);
-      res.json(result);
-    })
 
     /* ========================= 
         User Collection END 
