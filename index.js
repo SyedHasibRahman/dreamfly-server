@@ -428,29 +428,6 @@ async function run() {
       res.json(result);
     })
 
-
-
-    /*         app.put("/make-admin/:id", async (req, res) => {
-                const filter = req.params.id;
-                const updateDoc = {
-                    $set: {
-                        role: "admin",
-                    },
-                };
-                const result = await userCollection.updateOne(
-                    { email: filter },
-                    updateDoc
-                );
-                res.json(result);
-                console.log(result);
-            });
-    
-            app.get("/admins", async (req, res) => {
-                const cursor = userCollection.find({});
-                const users = await cursor.toArray();
-                res.json(users);
-            }); */
-
     /* ========================= 
         User Collection END 
         ======================= */
