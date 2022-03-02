@@ -34,74 +34,74 @@ async function run() {
   try {
     await client.connect();
 
-        const database = client.db('DreamFly');
-        const blogsCollection = database.collection('blogs');
-        const userCollection = database.collection("users");
-        const tourCollection = database.collection("tourPackages");
-        const ordersCollection = database.collection('orders');
-        const flightCollection = database.collection("flights");
+    const database = client.db('DreamFly');
+    const blogsCollection = database.collection('blogs');
+    const userCollection = database.collection("users");
+    const tourCollection = database.collection("tourPackages");
+    const ordersCollection = database.collection('orders');
+    const flightCollection = database.collection("flights");
 
-// ................ blog api start .............. //
-        // GET Blogs API
-        app.get('/blogs', async (req, res) => {
-            const cursor = blogsCollection.find({});
-            const blogs = await cursor.toArray();
-            res.send(blogs);
-        });
-        // GET tourPackages API
-        app.get('/tourPackages', async (req, res) => {
-            const cursor = tourCollection.find({});
-            const tourPackages = await cursor.toArray();
-            res.send(tourPackages);
-        });
+    // ................ blog api start .............. //
+    // GET Blogs API
+    app.get('/blogs', async (req, res) => {
+      const cursor = blogsCollection.find({});
+      const blogs = await cursor.toArray();
+      res.send(blogs);
+    });
+    // GET tourPackages API
+    app.get('/tourPackages', async (req, res) => {
+      const cursor = tourCollection.find({});
+      const tourPackages = await cursor.toArray();
+      res.send(tourPackages);
+    });
 
-        // POST Order API 
-        app.post('/orders', async (req, res) => {
-            const orders = req.body;
-            console.log('hit', orders);
-            const result = await ordersCollection.insertOne(orders);
-            console.log(result);
-            res.json(result);
-        });
-        // GET Order API 
-        app.get('/myorders', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email }
-            const cursor = ordersCollection.find(query);
-            const orders = await cursor.toArray();
-            res.send(orders);
+    // POST Order API 
+    app.post('/orders', async (req, res) => {
+      const orders = req.body;
+      console.log('hit', orders);
+      const result = await ordersCollection.insertOne(orders);
+      console.log(result);
+      res.json(result);
+    });
+    // GET Order API 
+    app.get('/myorders', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email }
+      const cursor = ordersCollection.find(query);
+      const orders = await cursor.toArray();
+      res.send(orders);
 
-        });
-        // GET Order API 
-        app.get('/myorders/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.findOne(query);
-            res.json(result);
-        });
-        // save Payment to myorders 
+    });
+    // GET Order API  for order
+    app.get('/myorders/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await ordersCollection.findOne(query);
+      res.json(result);
+    });
+    // save Payment to myorders 
 
-        app.put('/myorders/:id', async (req, res) => {
-            const id = req.params.id;
-            const payment = req.body;
-            const filter = { _id: ObjectId(id) };
-            const updateDoc = {
-                $set: {
-                    payment: payment
-                }
-            };
-            const result = await ordersCollection.updateOne(filter, updateDoc);
-            res.json(result);
+    app.put('/myorders/:id', async (req, res) => {
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          payment: payment
+        }
+      };
+      const result = await ordersCollection.updateOne(filter, updateDoc);
+      res.json(result);
 
-        })
+    })
 
-        //GET Single blog
-        app.get('/tourPackages/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const tourPackage = await tourCollection.findOne(query);
-            res.json(tourPackage);
-        });
+    //GET Single blog
+    app.get('/tourPackages/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const tourPackage = await tourCollection.findOne(query);
+      res.json(tourPackage);
+    });
 
     // //GET blogs API
     // app.get('/blogs', async (req, res) => {
@@ -132,52 +132,52 @@ async function run() {
       res.json(blog);
     });
 
-        //POST Blogs API
-        app.post('/blogs', async(req, res) => {
-            const blogs = req.body;  
-            const result = await blogsCollection.insertOne(blogs);
-            res.json(result);
-        });
+    //POST Blogs API
+    app.post('/blogs', async (req, res) => {
+      const blogs = req.body;
+      const result = await blogsCollection.insertOne(blogs);
+      res.json(result);
+    });
 
-        //DELETE Blog API
-        app.delete('/blogs/:id', async(req, res) => {
-            const id = req.params.id;
-            const query = {_id: ObjectId(id)};
-            const result = await blogsCollection.deleteOne(query);
-            console.log('deleting blog with id ', result);
-            res.json(result);
-        });
+    //DELETE Blog API
+    app.delete('/blogs/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await blogsCollection.deleteOne(query);
+      console.log('deleting blog with id ', result);
+      res.json(result);
+    });
 
-        //UPDATE Blog API
-        app.put("/blogs/:id", async (req, res) => {
-            const filter = { _id: ObjectId(req.params.id) };
-            console.log(req.params.id);
-            const result = await blogsCollection.updateMany(filter, {
-              $set: {
-                title: req.body.title,
-                fullTitle: req.body.fullTitle,
-                info: req.body.info,
-                description: req.body.description,
-                quote: req.body.quote,
-                quoteName: req.body.quoteName,
-                tag1: req.body.tag1,
-                tag2: req.body.tag2,
-              },
-            });
-            res.send(result);
-            console.log(result);
-          });
-   
-// ................ blog api end .............. //
+    //UPDATE Blog API
+    app.put("/blogs/:id", async (req, res) => {
+      const filter = { _id: ObjectId(req.params.id) };
+      console.log(req.params.id);
+      const result = await blogsCollection.updateMany(filter, {
+        $set: {
+          title: req.body.title,
+          fullTitle: req.body.fullTitle,
+          info: req.body.info,
+          description: req.body.description,
+          quote: req.body.quote,
+          quoteName: req.body.quoteName,
+          tag1: req.body.tag1,
+          tag2: req.body.tag2,
+        },
+      });
+      res.send(result);
+      console.log(result);
+    });
 
-
+    // ................ blog api end .............. //
 
 
-        // GET - All users
 
-        /* ========================= 
-        User Collection START 
-        ======================= */
+
+    // GET - All users
+
+    /* ========================= 
+    User Collection START 
+    ======================= */
 
     // GET - All users
     app.get("/users", async (req, res) => {
@@ -186,21 +186,21 @@ async function run() {
       res.json(users);
     });
 
-        // GET For Payment 
-        app.get('/booked:/id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await bookedCollection.findOne(query);
-            res.json(result);
-        })
+    // GET For Payment 
+    app.get('/booked:/id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await bookedCollection.findOne(query);
+      res.json(result);
+    })
 
-        // POST - Save user info to user collection
-        app.post("/users", async (req, res) => {
-            const newUser = req.body;
-            const result = await userCollection.insertOne(newUser);
-            console.log(result);
-            res.json(result);
-        });
+    // POST - Save user info to user collection
+    app.post("/users", async (req, res) => {
+      const newUser = req.body;
+      const result = await userCollection.insertOne(newUser);
+      console.log(result);
+      res.json(result);
+    });
 
     // PUT - Update user data to database for third party login system
     app.put("/users", async (req, res) => {
@@ -256,57 +256,57 @@ async function run() {
       const users = await cursor.toArray();
       res.json(users);
     });
-        // PUT - Set an user role as admin
+    // PUT - Set an user role as admin
 
 
-        app.put('/users/admin', async (req, res) => {
-            const user = req.body;
-            const filter = { email: user.email };
-            const updateDoc = { $set: { role: 'admin' } };
-            const result = await userCollection.updateOne(filter, updateDoc);
-            res.json(result);
-        })
+    app.put('/users/admin', async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: 'admin' } };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    })
 
 
 
-        /*         app.put("/make-admin/:id", async (req, res) => {
-                    const filter = req.params.id;
-                    const updateDoc = {
-                        $set: {
-                            role: "admin",
-                        },
-                    };
-                    const result = await userCollection.updateOne(
-                        { email: filter },
-                        updateDoc
-                    );
-                    res.json(result);
-                    console.log(result);
-                });
-        
-                app.get("/admins", async (req, res) => {
-                    const cursor = userCollection.find({});
-                    const users = await cursor.toArray();
-                    res.json(users);
-                }); */
+    /*         app.put("/make-admin/:id", async (req, res) => {
+                const filter = req.params.id;
+                const updateDoc = {
+                    $set: {
+                        role: "admin",
+                    },
+                };
+                const result = await userCollection.updateOne(
+                    { email: filter },
+                    updateDoc
+                );
+                res.json(result);
+                console.log(result);
+            });
+    
+            app.get("/admins", async (req, res) => {
+                const cursor = userCollection.find({});
+                const users = await cursor.toArray();
+                res.json(users);
+            }); */
 
     /* ========================= 
         User Collection END 
         ======================= */
-        // Payment 
-        app.post("/create-payment-intent", async (req, res) => {
-            const paymentInfo = req.body;
-            const amount = paymentInfo.price * 100;
-            const paymentIntent = await stripe.paymentIntents.create({
-                // amount: calculateOrderAmount(items),
-                currency: "usd",
-                amount: amount,
-                payment_method_types: ['card']
-            });
-            res.json({
-                clientSecret: paymentIntent.client_secret,
-            });
-        })
+    // Payment 
+    app.post("/create-payment-intent", async (req, res) => {
+      const paymentInfo = req.body;
+      const amount = paymentInfo.price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        // amount: calculateOrderAmount(items),
+        currency: "usd",
+        amount: amount,
+        payment_method_types: ['card']
+      });
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+      });
+    })
 
 
     app.get("/flight", async (req, res) => {
@@ -334,7 +334,7 @@ async function run() {
       const result = await flightCollection.find(query).toArray();
       res.json(result);
     });
-    
+
   } finally {
     // await client.close();
   }
