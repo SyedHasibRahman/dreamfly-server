@@ -13,10 +13,9 @@ app.use(cors());
 app.use(express.json());
 // router.use(cors());
 
-// Weare402
-// dreamfly402@gmail.com
 
-// https://vast-retreat-08893.herokuapp.com/  | https://git.heroku.com/vast-retreat-08893.git
+
+
 
 //Conect MongoDB
 // https://web.programming-hero.com/web-4/video/web-4-70-9-module-summary-and-database-connection
