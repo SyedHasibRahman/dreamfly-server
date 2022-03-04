@@ -40,13 +40,7 @@ async function run() {
     const ordersCollection = database.collection('orders');
     const flightCollection = database.collection("flights");
 
-    // ................ blog api start .............. //
-    // GET Blogs API
-    /*   app.get('/blogs', async (req, res) => {
-        const cursor = blogsCollection.find({});
-        const blogs = await cursor.toArray();
-        res.send(blogs);
-      }); */
+
 
 
 
