@@ -37,7 +37,6 @@ async function run() {
     const ordersCollection = database.collection('orders');
     const flightCollection = database.collection("flights");
 
-<<<<<<< development
     // ................ blog api start .............. //
 
     // GET tourPackages API
@@ -359,11 +358,6 @@ async function run() {
 
   }
   finally {
-=======
-
-
-  } finally {
->>>>>>> main
     // await client.close();
   }
 }
