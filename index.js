@@ -38,13 +38,13 @@ async function run() {
     const flightCollection = database.collection("flights");
 
     // ................ blog api start .............. //
-
-    // GET tourPackages API
-    app.get('/tourPackages', async (req, res) => {
-      const cursor = tourCollection.find({});
-      const tourPackages = await cursor.toArray();
-      res.send(tourPackages);
-    });
+        
+      // GET tourPackages API
+        app.get('/tourPackages', async (req, res) => {
+            const cursor = tourCollection.find({});
+            const tourPackages = await cursor.toArray();
+            res.send(tourPackages);
+        });
 
     // POST package order API
     app.post('/tourPackages', async (req, res) => {
@@ -92,33 +92,33 @@ async function run() {
       res.json(result)
     });
 
-    //GET Single blog
-    app.get('/tourPackages/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const tourPackage = await tourCollection.findOne(query);
-      res.json(tourPackage);
-    });
-
-    //GET blogs API
+        //GET Single blog
+        app.get('/tourPackages/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const tourPackage = await tourCollection.findOne(query);
+            res.json(tourPackage);
+        });
+        
+   //GET blogs API
     app.get('/blogs', async (req, res) => {
-      const cursor = blogsCollection.find({});
-      const page = req.query.page;
-      const size = parseInt(req.query.size);
-      let blogs;
-      const count = await cursor.count();
+        const cursor = blogsCollection.find({});
+        const page = req.query.page;
+        const size = parseInt(req.query.size);
+        let blogs;
+        const count = await cursor.count();
 
-      if (page) {
-        blogs = await cursor.skip(page * size).limit(size).toArray();
-      }
-      else {
-        blogs = await cursor.toArray();
-      }
+        if (page) {
+            blogs = await cursor.skip(page * size).limit(size).toArray();
+        }
+        else {
+            blogs = await cursor.toArray();
+        }
 
-      res.send({
-        count,
-        blogs
-      });
+        res.send({
+            count,
+            blogs
+        });
     });
 
     //GET Single blog
@@ -355,8 +355,8 @@ async function run() {
       const result = await flightCollection.find(query).toArray();
       res.json(result);
     });
-
-  }
+    
+  } 
   finally {
     // await client.close();
   }
