@@ -42,12 +42,7 @@ async function run() {
         const flightCollection = database.collection("flights");
 
 // ................ blog api start .............. //
-        // GET Blogs API
-        app.get('/blogs', async (req, res) => {
-            const cursor = blogsCollection.find({});
-            const blogs = await cursor.toArray();
-            res.send(blogs);
-        });
+        
         // GET tourPackages API
         app.get('/tourPackages', async (req, res) => {
             const cursor = tourCollection.find({});
@@ -102,27 +97,27 @@ async function run() {
             const tourPackage = await tourCollection.findOne(query);
             res.json(tourPackage);
         });
+        
+   //GET blogs API
+    app.get('/blogs', async (req, res) => {
+        const cursor = blogsCollection.find({});
+        const page = req.query.page;
+        const size = parseInt(req.query.size);
+        let blogs;
+        const count = await cursor.count();
 
-    // //GET blogs API
-    // app.get('/blogs', async (req, res) => {
-    //     const cursor = blogsCollection.find({});
-    //     const page = req.query.page;
-    //     const size = parseInt(req.query.size);
-    //     let blogs;
-    //     const count = await cursor.count();
+        if (page) {
+            blogs = await cursor.skip(page * size).limit(size).toArray();
+        }
+        else {
+            blogs = await cursor.toArray();
+        }
 
-    //     if (page) {
-    //         blogs = await cursor.skip(page * size).limit(size).toArray();
-    //     }
-    //     else {
-    //         blogs = await cursor.toArray();
-    //     }
-
-    //     res.send({
-    //         count,
-    //         blogs
-    //     });
-    // });
+        res.send({
+            count,
+            blogs
+        });
+    });
 
     //GET Single blog
     app.get("/blogs/:id", async (req, res) => {
@@ -309,31 +304,31 @@ async function run() {
         })
 
 
-    app.get("/flight", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
+    // app.get("/flight", async (req, res) => {
+    //   const cursor = flightCollection.find({});
+    //   const flight = await cursor.toArray();
+    //   res.json(flight);
+    // });
 
-    // get the flight data
-    app.get("/filterFlight", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
+    // // get the flight data
+    // app.get("/filterFlight", async (req, res) => {
+    //   const cursor = flightCollection.find({});
+    //   const flight = await cursor.toArray();
+    //   res.json(flight);
+    // });
 
-    // get the flight data
-    app.get("/filter", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
-    // filter by from to
-    app.post("/filter", async (req, res) => {
-      const query = req.body;
-      const result = await flightCollection.find(query).toArray();
-      res.json(result);
-    });
+    // // get the flight data
+    // app.get("/filter", async (req, res) => {
+    //   const cursor = flightCollection.find({});
+    //   const flight = await cursor.toArray();
+    //   res.json(flight);
+    // });
+    // // filter by from to
+    // app.post("/filter", async (req, res) => {
+    //   const query = req.body;
+    //   const result = await flightCollection.find(query).toArray();
+    //   res.json(result);
+    // });
     
   } finally {
     // await client.close();
