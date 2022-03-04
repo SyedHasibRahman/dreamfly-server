@@ -14,9 +14,6 @@ app.use(express.json());
 // router.use(cors());
 
 
-
-
-
 //Conect MongoDB
 // https://web.programming-hero.com/web-4/video/web-4-70-9-module-summary-and-database-connection
 
@@ -41,18 +38,13 @@ async function run() {
     const flightCollection = database.collection("flights");
 
     // ................ blog api start .............. //
-    // GET Blogs API
-    app.get('/blogs', async (req, res) => {
-      const cursor = blogsCollection.find({});
-      const blogs = await cursor.toArray();
-      res.send(blogs);
-    });
-    // GET tourPackages API
-    app.get('/tourPackages', async (req, res) => {
-      const cursor = tourCollection.find({});
-      const tourPackages = await cursor.toArray();
-      res.send(tourPackages);
-    });
+        
+      // GET tourPackages API
+        app.get('/tourPackages', async (req, res) => {
+            const cursor = tourCollection.find({});
+            const tourPackages = await cursor.toArray();
+            res.send(tourPackages);
+        });
 
     // POST package order API
     app.post('/tourPackages', async (req, res) => {
@@ -95,20 +87,39 @@ async function run() {
         $set: {
           payment: payment
         }
-      };
+      }
       const result = await ordersCollection.updateOne(filter, updateDoc);
-      res.json(result);
-
-    })
-
-    //GET Single blog
-    app.get('/tourPackages/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const tourPackage = await tourCollection.findOne(query);
-      res.json(tourPackage);
+      res.json(result)
     });
 
+        //GET Single blog
+        app.get('/tourPackages/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const tourPackage = await tourCollection.findOne(query);
+            res.json(tourPackage);
+        });
+        
+   //GET blogs API
+    app.get('/blogs', async (req, res) => {
+        const cursor = blogsCollection.find({});
+        const page = req.query.page;
+        const size = parseInt(req.query.size);
+        let blogs;
+        const count = await cursor.count();
+
+        if (page) {
+            blogs = await cursor.skip(page * size).limit(size).toArray();
+        }
+        else {
+            blogs = await cursor.toArray();
+        }
+
+        res.send({
+            count,
+            blogs
+        });
+    });
 
     //GET Single blog
     app.get("/blogs/:id", async (req, res) => {
@@ -344,8 +355,9 @@ async function run() {
       const result = await flightCollection.find(query).toArray();
       res.json(result);
     });
-
-  } finally {
+    
+  } 
+  finally {
     // await client.close();
   }
 }
