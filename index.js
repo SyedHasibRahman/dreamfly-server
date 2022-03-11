@@ -36,6 +36,7 @@ async function run() {
     const tourCollection = database.collection("tourPackages");
     const ordersCollection = database.collection('orders');
     const flightCollection = database.collection("flights");
+    const commentsCollection = database.collection("comment");
 
     // ................ blog api start .............. //
         
@@ -189,6 +190,35 @@ async function run() {
 
     // ................ blog api end .............. //
 
+
+    // ................ comment api start .............. //
+
+    //GET comment api
+    app.get("/comments", async (req, res) => {
+      const cursor = commentsCollection.find({});
+      const comments = await cursor.toArray();
+      res.json(comments);
+    });
+
+    //POST comment api
+    app.post('/comments', async (req, res) => {
+      const comments = req.body;
+      const result = await commentsCollection.insertOne(comments);
+      res.json(result);
+    });
+
+    //delete comment api
+    app.delete('/comments/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await commentsCollection.deleteOne(query);
+      res.json(result);
+    });
+
+    // ................ comment api end .............. //
+
+
+    
 
 
 
