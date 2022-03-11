@@ -41,13 +41,7 @@ async function run() {
     const flightCollection = database.collection("flights");
     const commentsCollection = database.collection("comment");
 
-    // ................ blog api start .............. //
-    // GET Blogs API
-    app.get('/blogs', async (req, res) => {
-      const cursor = blogsCollection.find({});
-      const blogs = await cursor.toArray();
-      res.send(blogs);
-    });
+
     // GET tourPackages API
     app.get('/tourPackages', async (req, res) => {
       const cursor = tourCollection.find({});
@@ -102,7 +96,7 @@ async function run() {
 
     })
 
-    //GET Single blog
+    //GET Single 
     app.get('/tourPackages/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -110,26 +104,28 @@ async function run() {
       res.json(tourPackage);
     });
 
-    // //GET blogs API
-    // app.get('/blogs', async (req, res) => {
-    //     const cursor = blogsCollection.find({});
-    //     const page = req.query.page;
-    //     const size = parseInt(req.query.size);
-    //     let blogs;
-    //     const count = await cursor.count();
+// ................ blog api start .............. //
 
-    //     if (page) {
-    //         blogs = await cursor.skip(page * size).limit(size).toArray();
-    //     }
-    //     else {
-    //         blogs = await cursor.toArray();
-    //     }
+    //GET blogs API
+    app.get('/blogs', async (req, res) => {
+        const cursor = blogsCollection.find({});
+        const page = req.query.page;
+        const size = parseInt(req.query.size);
+        let blogs;
+        const count = await cursor.count();
 
-    //     res.send({
-    //         count,
-    //         blogs
-    //     });
-    // });
+        if (page) {
+            blogs = await cursor.skip(page * size).limit(size).toArray();
+        }
+        else {
+            blogs = await cursor.toArray();
+        }
+
+        res.send({
+            count,
+            blogs
+        });
+    });
 
     //GET Single blog
     app.get("/blogs/:id", async (req, res) => {
@@ -154,28 +150,6 @@ async function run() {
       console.log('deleting blog with id ', result);
       res.json(result);
     });
-
-    //UPDATE Blog API
-    app.put("/blogs/:id", async (req, res) => {
-      const filter = { _id: ObjectId(req.params.id) };
-      console.log(req.params.id);
-      const result = await blogsCollection.updateMany(filter, {
-        $set: {
-          title: req.body.title,
-          fullTitle: req.body.fullTitle,
-          info: req.body.info,
-          description: req.body.description,
-          quote: req.body.quote,
-          quoteName: req.body.quoteName,
-          tag1: req.body.tag1,
-          tag2: req.body.tag2,
-        },
-      });
-      res.send(result);
-      console.log(result);
-    });
-
-    // ................ blog api end .............. //
 
     //UPDATE Blog API
     app.put("/blogs/:id", async (req, res) => {
