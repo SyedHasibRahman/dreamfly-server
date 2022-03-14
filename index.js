@@ -40,6 +40,8 @@ async function run() {
         const ordersCollection = database.collection('orders');
         const flightCollection = database.collection("flights");
         const commentsCollection = database.collection("comment");
+        const ratingsCollection = database.collection("reviews");
+
 
 
         // GET tourPackages API
@@ -498,6 +500,23 @@ async function run() {
             const query = req.body;
             const result = await flightCollection.find(query).toArray();
             res.json(result);
+        });
+
+        // get Ratings by users ///
+
+        app.get('/reviews', async (req, res) => {
+            const cursor = ratingsCollection.find({});
+
+            const result = await cursor.toArray();
+            res.json(result);
+        });
+        // POst Ratings By users //
+        app.post('/reviews', async (req, res) => {
+            const data = req.body;
+
+            const result = await ratingsCollection.insertOne(data);
+
+            res.send(result);
         });
 
     } finally {
