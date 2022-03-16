@@ -41,8 +41,24 @@ async function run() {
     const flightCollection = database.collection("flights");
     const commentsCollection = database.collection("comment");
     const ratingsCollection = database.collection("reviews");
+    const serviceCollection = database.collection("service");
 
 
+
+    // GET services API
+    app.get('/services', async (req, res) => {
+      const cursor = serviceCollection.find({});
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+
+    //GET Single 
+    app.get('/services/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await serviceCollection.findOne(query);
+      res.json(service);
+    });
 
     // GET tourPackages API
     app.get('/tourPackages', async (req, res) => {
@@ -481,7 +497,13 @@ async function run() {
       const flight = await cursor.toArray();
       res.json(flight);
     });
-
+    // Get Flight by ID
+    app.get('/flight/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const flight = await flightCollection.findOne(query);
+      res.json(flight);
+    });
     // get the flight data
     app.get("/filterFlight", async (req, res) => {
       const cursor = flightCollection.find({});
