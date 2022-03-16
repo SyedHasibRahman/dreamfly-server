@@ -36,6 +36,7 @@ async function run() {
     const blogsCollection = database.collection("blogs");
     const userCollection = database.collection("users");
     const flightCollection = database.collection("flights");
+    const serviceCollection = database.collection("service");
 
     // GET Blogs API
     app.get("/blogs", async (req, res) => {
@@ -43,6 +44,50 @@ async function run() {
       const blogs = await cursor.toArray();
       res.send(blogs);
     });
+    // GET Service API Sohel
+    app.get("/service", async (req, res) => {
+      const cursor = serviceCollection.find({});
+      const service = await cursor.toArray();
+      res.send(service);
+    });
+
+    // POST service order API
+    app.post('/service', async (req, res) => {
+      const product = req.body;
+      const result = await serviceCollection.insertOne(product);
+      res.json(result);
+  });
+
+
+
+  //Delete service Api
+  app.delete('/service/:id', async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: ObjectId(id) };
+      const result = await serviceCollection.deleteOne(quary);
+      res.json(result);
+  });
+
+  //updated service data
+  app.put('/service/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedservice = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+          $set: {
+              img: updatedservice.images,
+              title: updatedservice.title,
+              name: updatedservice.name,
+              price: updatedservice.price,
+              category: updatedservice.category,
+              seat: updatedservice.seat,
+          },
+      };
+      const result = await serviceCollection.updateOne(filter, updateDoc, options)
+      console.log('updating user', req);
+      res.json(result)
+  })
 
     // //GET blogs API
     // app.get('/blogs', async (req, res) => {
