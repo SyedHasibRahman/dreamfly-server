@@ -41,8 +41,25 @@ async function run() {
         const flightCollection = database.collection("flights");
         const commentsCollection = database.collection("comment");
         const ratingsCollection = database.collection("reviews");
+        const serviceCollection = database.collection("service");
+        const teamsInfoCollection = database.collection("teamsInfo");
 
 
+
+        // GET services API
+        app.get('/services', async (req, res) => {
+            const cursor = serviceCollection.find({});
+            const services = await cursor.toArray();
+            res.send(services);
+        });
+
+        //GET Single 
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const service = await serviceCollection.findOne(query);
+            res.json(service);
+        });
 
         // GET tourPackages API
         app.get('/tourPackages', async (req, res) => {
@@ -98,7 +115,7 @@ async function run() {
 
         })
 
-        //GET Single code
+        //GET Single 
         app.get('/tourPackages/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -481,7 +498,13 @@ async function run() {
             const flight = await cursor.toArray();
             res.json(flight);
         });
-
+        // Get Flight by ID
+        app.get('/flight/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const flight = await flightCollection.findOne(query);
+            res.json(flight);
+        });
         // get the flight data
         app.get("/filterFlight", async (req, res) => {
             const cursor = flightCollection.find({});
@@ -517,6 +540,22 @@ async function run() {
             const result = await ratingsCollection.insertOne(data);
 
             res.send(result);
+        });
+
+        // team details get data
+        app.get('/teamsInfo', async (req, res) => {
+            const cursor = teamsInfoCollection.find({});
+
+            const result = await cursor.toArray();
+            res.json(result);
+        });
+
+        //GET Single team details
+        app.get("/teamsInfo/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const blog = await teamsInfoCollection.findOne(query);
+            res.json(blog);
         });
 
     } finally {
