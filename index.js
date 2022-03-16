@@ -98,7 +98,7 @@ async function run() {
 
         })
 
-        //GET Single 
+        //GET Single code
         app.get('/tourPackages/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
