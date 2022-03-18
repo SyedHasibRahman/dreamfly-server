@@ -14,12 +14,6 @@ app.use(express.json());
 // router.use(cors());
 
 
-
-
-
-//Conect MongoDB
-// https://web.programming-hero.com/web-4/video/web-4-70-9-module-summary-and-database-connection
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.x4jxd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
@@ -46,86 +40,7 @@ async function run() {
         const coursesCollection = database.collection("courses");
         const subscribesCollection = database.collection("subscribes");
 
-
-
-        // GET services API
-        app.get('/services', async (req, res) => {
-            const cursor = serviceCollection.find({});
-            const services = await cursor.toArray();
-            res.send(services);
-        });
-
-        //GET Single 
-        app.get('/services/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const service = await serviceCollection.findOne(query);
-            res.json(service);
-        });
-
-        // GET tourPackages API
-        app.get('/tourPackages', async (req, res) => {
-            const cursor = tourCollection.find({});
-            const tourPackages = await cursor.toArray();
-            res.send(tourPackages);
-        });
-
-        // POST package order API
-        app.post('/tourPackages', async (req, res) => {
-            const product = req.body;
-            const result = await tourCollection.insertOne(product);
-            res.json(result);
-        });
-
-        // POST Order API
-        app.post('/orders', async (req, res) => {
-            const orders = req.body;
-            console.log('hit', orders);
-            const result = await ordersCollection.insertOne(orders);
-            console.log(result);
-            res.json(result);
-        });
-        // GET Order API
-        app.get('/myorders', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email }
-            const cursor = ordersCollection.find(query);
-            const orders = await cursor.toArray();
-            res.send(orders);
-
-        });
-        // GET Order API
-        app.get('/myorders/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.findOne(query);
-            res.json(result);
-        });
-        // save Payment to myorders
-
-        app.put('/myorders/:id', async (req, res) => {
-            const id = req.params.id;
-            const payment = req.body;
-            const filter = { _id: ObjectId(id) };
-            const updateDoc = {
-                $set: {
-                    payment: payment
-                }
-            };
-            const result = await ordersCollection.updateOne(filter, updateDoc);
-            res.json(result);
-
-        })
-
-        //GET Single 
-        app.get('/tourPackages/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const tourPackage = await tourCollection.findOne(query);
-            res.json(tourPackage);
-        });
-
-        // ................ blog api start .............. //
+// ................ blog api start .............. //
 
         //GET blogs API
         app.get('/blogs', async (req, res) => {
@@ -192,45 +107,11 @@ async function run() {
             console.log(result);
         });
 
-        // ................ blog api end .............. //
-
-
-        // ................ comment api start .............. //
-
-        //GET comment api
-        app.get("/comments", async (req, res) => {
-            const cursor = commentsCollection.find({});
-            const comments = await cursor.toArray();
-            res.json(comments);
-        });
-
-        //POST comment api
-        app.post('/comments', async (req, res) => {
-            const comments = req.body;
-            const result = await commentsCollection.insertOne(comments);
-            res.json(result);
-        });
-
-        //delete comment api
-        app.delete('/comments/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await commentsCollection.deleteOne(query);
-            res.json(result);
-        });
-
-        // ................ comment api end .............. //
+// ................ blog api end .............. //
 
 
 
-
-
-
-        // GET - All users
-
-        /* ========================= 
-        User Collection START 
-        ======================= */
+// ................ users api start .............. //
 
         // GET - All users
         app.get("/users", async (req, res) => {
@@ -238,14 +119,6 @@ async function run() {
             const users = await cursor.toArray();
             res.json(users);
         });
-
-        // GET For Payment 
-        app.get('/booked:/id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await bookedCollection.findOne(query);
-            res.json(result);
-        })
 
         // POST - Save user info to user collection
         app.post("/users", async (req, res) => {
@@ -304,71 +177,110 @@ async function run() {
             console.log(result);
         });
 
+        // Get api admin
         app.get("/admins", async (req, res) => {
             const cursor = userCollection.find({});
             const users = await cursor.toArray();
             res.json(users);
         });
+
         // PUT - Set an user role as admin
-
-
         app.put('/users/admin', async (req, res) => {
             const user = req.body;
             const filter = { email: user.email };
             const updateDoc = { $set: { role: 'admin' } };
             const result = await userCollection.updateOne(filter, updateDoc);
             res.json(result);
-        })
+        });
+
+// ................ users api end .............. //
 
 
 
-        /*         app.put("/make-admin/:id", async (req, res) => {
-                    const filter = req.params.id;
-                    const updateDoc = {
-                        $set: {
-                            role: "admin",
-                        },
-                    };
-                    const result = await userCollection.updateOne(
-                        { email: filter },
-                        updateDoc
-                    );
-                    res.json(result);
-                    console.log(result);
-                });
+// ................ Tourpackage api start .............. //
+
+        // GET tourPackages API
+        app.get('/tourPackages', async (req, res) => {
+            const cursor = tourCollection.find({});
+            const tourPackages = await cursor.toArray();
+            res.send(tourPackages);
+        });
+
+        //GET Single tourPackages
+        app.get('/tourPackages/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const tourPackage = await tourCollection.findOne(query);
+            res.json(tourPackage);
+        });
         
-                app.get("/admins", async (req, res) => {
-                    const cursor = userCollection.find({});
-                    const users = await cursor.toArray();
-                    res.json(users);
-                }); */
+        // POST package order API
+        app.post('/tourPackages', async (req, res) => {
+            const product = req.body;
+            const result = await tourCollection.insertOne(product);
+            res.json(result);
+        });
 
-        /* ========================= 
-            User Collection END 
-            ======================= */
-        // Payment 
-        app.post("/create-payment-intent", async (req, res) => {
-            const paymentInfo = req.body;
-            const amount = paymentInfo.price * 100;
-            const paymentIntent = await stripe.paymentIntents.create({
-                // amount: calculateOrderAmount(items),
-                currency: "usd",
-                amount: amount,
-                payment_method_types: ['card']
-            });
-            res.json({
-                clientSecret: paymentIntent.client_secret,
-            });
-        })
+// ................ Tourpackage api end .............. //
 
 
+
+// ................ Order api start .............. //
+
+        // POST Order API
+        app.post('/orders', async (req, res) => {
+            const orders = req.body;
+            console.log('hit', orders);
+            const result = await ordersCollection.insertOne(orders);
+            console.log(result);
+            res.json(result);
+        });
+        // GET Order API
+        app.get('/myorders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const cursor = ordersCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders);
+
+        });
+        // GET Order API
+        app.get('/myorders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.findOne(query);
+            res.json(result);
+        });
+
+        // save Payment to myorders
+        app.put('/myorders/:id', async (req, res) => {
+            const id = req.params.id;
+            const payment = req.body;
+            const filter = { _id: ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    payment: payment
+                    }
+                };
+                const result = await ordersCollection.updateOne(filter, updateDoc);
+                res.json(result);
+        
+        });
+
+// ................ Order api end .............. //
+
+
+
+// ................ Flight api start .............. //
+
+        // Get flight data
         app.get("/flight", async (req, res) => {
             const cursor = flightCollection.find({});
             const flight = await cursor.toArray();
             res.json(flight);
         });
 
-        // get the flight data
+        // get the filter flight data
         app.get("/filterFlight", async (req, res) => {
             const cursor = flightCollection.find({});
             const flight = await cursor.toArray();
@@ -381,125 +293,14 @@ async function run() {
             const flight = await cursor.toArray();
             res.json(flight);
         });
+
         // filter by from to
         app.post("/filter", async (req, res) => {
             const query = req.body;
             const result = await flightCollection.find(query).toArray();
             res.json(result);
         });
-
-        // PUT - Update user data to database for third party login system
-        app.put("/users", async (req, res) => {
-            const user = req.body;
-            console.log("put", user);
-            const filter = { email: user.email };
-            const options = { upsert: true };
-            const updateDoc = { $set: user };
-            const result = await userCollection.updateOne(filter, updateDoc, options);
-            res.json(result);
-        });
-
-        // Delete - Delete an user from DB
-        app.delete("/users/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await userCollection.deleteOne(query);
-            res.json({ _id: id, deletedCount: result.deletedCount });
-        });
-
-        // GET - Admin Status.
-        app.get("/users/:email", async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const result = await userCollection.findOne(query);
-            let isAdmin = false;
-            if (result?.role === "admin") {
-                isAdmin = true;
-                res.json({ admin: isAdmin });
-            } else {
-                res.json({ admin: isAdmin });
-            }
-        });
-
-        // PUT - Set an user role as admin
-        app.put("/make-admin/:id", async (req, res) => {
-            const filter = req.params.id;
-            const updateDoc = {
-                $set: {
-                    role: "admin",
-                },
-            };
-            const result = await userCollection.updateOne(
-                { email: filter },
-                updateDoc
-            );
-            res.json(result);
-            console.log(result);
-        });
-
-        app.get("/admins", async (req, res) => {
-            const cursor = userCollection.find({});
-            const users = await cursor.toArray();
-            res.json(users);
-        });
-        // PUT - Set an user role as admin
-
-
-        app.put('/users/admin', async (req, res) => {
-            const user = req.body;
-            const filter = { email: user.email };
-            const updateDoc = { $set: { role: 'admin' } };
-            const result = await userCollection.updateOne(filter, updateDoc);
-            res.json(result);
-        })
-
-
-
-        /*         app.put("/make-admin/:id", async (req, res) => {
-                    const filter = req.params.id;
-                    const updateDoc = {
-                        $set: {
-                            role: "admin",
-                        },
-                    };
-                    const result = await userCollection.updateOne(
-                        { email: filter },
-                        updateDoc
-                    );
-                    res.json(result);
-                    console.log(result);
-                });
         
-                app.get("/admins", async (req, res) => {
-                    const cursor = userCollection.find({});
-                    const users = await cursor.toArray();
-                    res.json(users);
-                }); */
-
-        /* ========================= 
-            User Collection END 
-            ======================= */
-        // Payment 
-        app.post("/create-payment-intent", async (req, res) => {
-            const paymentInfo = req.body;
-            const amount = paymentInfo.price * 100;
-            const paymentIntent = await stripe.paymentIntents.create({
-                // amount: calculateOrderAmount(items),
-                currency: "usd",
-                amount: amount,
-                payment_method_types: ['card']
-            });
-            res.json({
-                clientSecret: paymentIntent.client_secret,
-            });
-        })
-
-
-        app.get("/flight", async (req, res) => {
-            const cursor = flightCollection.find({});
-            const flight = await cursor.toArray();
-            res.json(flight);
-        });
         // Get Flight by ID
         app.get('/flight/:id', async (req, res) => {
             const id = req.params.id;
@@ -507,34 +308,50 @@ async function run() {
             const flight = await flightCollection.findOne(query);
             res.json(flight);
         });
-        // get the flight data
-        app.get("/filterFlight", async (req, res) => {
-            const cursor = flightCollection.find({});
-            const flight = await cursor.toArray();
-            res.json(flight);
+        
+
+// ................ Flight api end .............. //
+
+
+
+// ................ comment api start .............. //
+
+        //GET comment api
+        app.get("/comments", async (req, res) => {
+            const cursor = commentsCollection.find({});
+            const comments = await cursor.toArray();
+            res.json(comments);
         });
 
-        // get the flight data
-        app.get("/filter", async (req, res) => {
-            const cursor = flightCollection.find({});
-            const flight = await cursor.toArray();
-            res.json(flight);
-        });
-        // filter by from to
-        app.post("/filter", async (req, res) => {
-            const query = req.body;
-            const result = await flightCollection.find(query).toArray();
+        //POST comment api
+        app.post('/comments', async (req, res) => {
+            const comments = req.body;
+            const result = await commentsCollection.insertOne(comments);
             res.json(result);
         });
 
-        // get Ratings by users ///
+        //delete comment api
+        app.delete('/comments/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await commentsCollection.deleteOne(query);
+            res.json(result);
+        });
 
+// ................ comment api end .............. //
+
+
+
+// ................ Review api start .............. //
+
+        // get Ratings by users //
         app.get('/reviews', async (req, res) => {
             const cursor = ratingsCollection.find({});
 
             const result = await cursor.toArray();
             res.json(result);
         });
+
         // POst Ratings By users //
         app.post('/reviews', async (req, res) => {
             const data = req.body;
@@ -543,6 +360,33 @@ async function run() {
 
             res.send(result);
         });
+
+// ................ Review api end .............. //
+
+
+
+// ................ Services api start .............. //
+
+        // GET services API
+        app.get('/services', async (req, res) => {
+            const cursor = serviceCollection.find({});
+            const services = await cursor.toArray();
+            res.send(services);
+        });
+
+        //GET Single 
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const service = await serviceCollection.findOne(query);
+            res.json(service);
+        });
+
+// ................ Services api end .............. //
+
+
+
+// ................ Teams info api start .............. //
 
         // team details get data
         app.get('/teamsInfo', async (req, res) => {
@@ -560,6 +404,12 @@ async function run() {
             res.json(blog);
         });
 
+// ................ Teams info api end .............. //
+
+
+
+// ................ Courses api start .............. //
+
         // course get data 
         app.get('/courses', async (req, res) => {
             const cursor = coursesCollection.find({});
@@ -576,19 +426,57 @@ async function run() {
             res.json(blog);
         });
 
-        // subscribes get data 
-        app.get('/subscribes', async (req, res) => {
-            const cursor = subscribesCollection.find({});
+// ................ Courses api end .............. //
 
-            const result = await cursor.toArray();
+
+
+// ................ Subscribes api start .............. //
+
+    // subscribes get data 
+    app.get('/subscribes', async (req, res) => {
+        const cursor = subscribesCollection.find({});
+
+        const result = await cursor.toArray();
+        res.json(result);
+    });
+
+    // subscribes poist data 
+    app.post('/subscribes', async (req, res) => {
+        const data = req.body;
+        const result = await subscribesCollection.insertOne(data);
+        res.send(result);
+    });
+
+// ................ Subscribes api end .............. //
+
+
+
+// ................ Payment stripe api start .............. //
+
+        // GET For Payment 
+        app.get('/booked:/id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookedCollection.findOne(query);
             res.json(result);
+        })
+
+        // Payment 
+        app.post("/create-payment-intent", async (req, res) => {
+            const paymentInfo = req.body;
+            const amount = paymentInfo.price * 100;
+            const paymentIntent = await stripe.paymentIntents.create({
+                // amount: calculateOrderAmount(items),
+                currency: "usd",
+                amount: amount,
+                payment_method_types: ['card']
+            });
+            res.json({
+                clientSecret: paymentIntent.client_secret,
+            });
         });
-        // subscribes poist data 
-        app.post('/subscribes', async (req, res) => {
-            const data = req.body;
-            const result = await subscribesCollection.insertOne(data);
-            res.send(result);
-        });
+
+// ................ Payment stripe api end .............. //   
 
     } finally {
         // await client.close();
