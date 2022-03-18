@@ -43,6 +43,8 @@ async function run() {
         const ratingsCollection = database.collection("reviews");
         const serviceCollection = database.collection("service");
         const teamsInfoCollection = database.collection("teamsInfo");
+        const coursesCollection = database.collection("courses");
+        const subscribesCollection = database.collection("subscribes");
 
 
 
@@ -550,12 +552,42 @@ async function run() {
             res.json(result);
         });
 
-        //GET Single team details
+        //GET Single team details   coursesCollection
         app.get("/teamsInfo/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const blog = await teamsInfoCollection.findOne(query);
             res.json(blog);
+        });
+
+        // course get data 
+        app.get('/courses', async (req, res) => {
+            const cursor = coursesCollection.find({});
+
+            const result = await cursor.toArray();
+            res.json(result);
+        });
+
+        //GET Single course
+        app.get("/courses/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const blog = await coursesCollection.findOne(query);
+            res.json(blog);
+        });
+
+        // subscribes get data 
+        app.get('/subscribes', async (req, res) => {
+            const cursor = subscribesCollection.find({});
+
+            const result = await cursor.toArray();
+            res.json(result);
+        });
+        // subscribes poist data 
+        app.post('/subscribes', async (req, res) => {
+            const data = req.body;
+            const result = await subscribesCollection.insertOne(data);
+            res.send(result);
         });
 
     } finally {
