@@ -439,6 +439,7 @@ async function run() {
       const users = await cursor.toArray();
       res.json(users);
     });
+
     // PUT - Set an user role as admin
 
 
