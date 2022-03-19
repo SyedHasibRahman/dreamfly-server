@@ -453,21 +453,21 @@ async function run() {
 
     // ................ Courses api start .............. //
 
-    /*  // course get data 
-     app.get('/courses', async (req, res) => {
-       const cursor = coursesCollection.find({});
- 
-       const result = await cursor.toArray();
-       res.json(result);
-     });
- 
-     //GET Single course
-     app.get("/courses/:id", async (req, res) => {
-       const id = req.params.id;
-       const query = { _id: ObjectId(id) };
-       const blog = await coursesCollection.findOne(query);
-       res.json(blog);
-     }); */
+    // course get data 
+    app.get('/courses', async (req, res) => {
+      const cursor = coursesCollection.find({});
+
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+
+    //GET Single course
+    app.get("/courses/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const blog = await coursesCollection.findOne(query);
+      res.json(blog);
+    });
 
     // ................ Courses api end .............. //
 
