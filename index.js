@@ -430,23 +430,23 @@ async function run() {
     });
 
     // ................ Teams info api start .............. //
-    /* 
-        // team details get data
-        app.get('/teamsInfo', async (req, res) => {
-          const cursor = teamsInfoCollection.find({});
-    
-          const result = await cursor.toArray();
-          res.json(result);
-        });
-    
-        //GET Single team details   coursesCollection
-        app.get("/teamsInfo/:id", async (req, res) => {
-          const id = req.params.id;
-          const query = { _id: ObjectId(id) };
-          const blog = await teamsInfoCollection.findOne(query);
-          res.json(blog);
-        });
-     */
+
+    // team details get data
+    app.get('/teamsInfo', async (req, res) => {
+      const cursor = teamsInfoCollection.find({});
+
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+
+    //GET Single team details   coursesCollection
+    app.get("/teamsInfo/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const blog = await teamsInfoCollection.findOne(query);
+      res.json(blog);
+    });
+
     // ................ Teams info api end .............. //
 
 
