@@ -289,54 +289,49 @@ async function run() {
       res.json(result);
 
     });
-<<<<<<< HEAD
-
-    // PUT - Set an user role as admin
-=======
->>>>>>> 9ca6feb16300aa000d44845cc828ce133dca0fb0
 
     // ................ Order api end .............. //
 
 
 
     // ................ Flight api start .............. //
-
-    // Get flight data
-    app.get("/flight", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
-
-    // get the filter flight data
-    app.get("/filterFlight", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
-
-    // get the flight data
-    app.get("/filter", async (req, res) => {
-      const cursor = flightCollection.find({});
-      const flight = await cursor.toArray();
-      res.json(flight);
-    });
-
-    // filter by from to
-    app.post("/filter", async (req, res) => {
-      const query = req.body;
-      const result = await flightCollection.find(query).toArray();
-      res.json(result);
-    });
-
-    // Get Flight by ID
-    app.get('/flight/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const flight = await flightCollection.findOne(query);
-      res.json(flight);
-    });
-
+    /* 
+        // Get flight data
+        app.get("/flight", async (req, res) => {
+          const cursor = flightCollection.find({});
+          const flight = await cursor.toArray();
+          res.json(flight);
+        });
+    
+        // get the filter flight data
+        app.get("/filterFlight", async (req, res) => {
+          const cursor = flightCollection.find({});
+          const flight = await cursor.toArray();
+          res.json(flight);
+        });
+    
+        // get the flight data
+        app.get("/filter", async (req, res) => {
+          const cursor = flightCollection.find({});
+          const flight = await cursor.toArray();
+          res.json(flight);
+        });
+    
+        // filter by from to
+        app.post("/filter", async (req, res) => {
+          const query = req.body;
+          const result = await flightCollection.find(query).toArray();
+          res.json(result);
+        });
+    
+        // Get Flight by ID
+        app.get('/flight/:id', async (req, res) => {
+          const id = req.params.id;
+          const query = { _id: ObjectId(id) };
+          const flight = await flightCollection.findOne(query);
+          res.json(flight);
+        });
+     */
 
     // ................ Flight api end .............. //
 
@@ -435,44 +430,44 @@ async function run() {
     });
 
     // ................ Teams info api start .............. //
-
-    // team details get data
-    app.get('/teamsInfo', async (req, res) => {
-      const cursor = teamsInfoCollection.find({});
-
-      const result = await cursor.toArray();
-      res.json(result);
-    });
-
-    //GET Single team details   coursesCollection
-    app.get("/teamsInfo/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const blog = await teamsInfoCollection.findOne(query);
-      res.json(blog);
-    });
-
+    /* 
+        // team details get data
+        app.get('/teamsInfo', async (req, res) => {
+          const cursor = teamsInfoCollection.find({});
+    
+          const result = await cursor.toArray();
+          res.json(result);
+        });
+    
+        //GET Single team details   coursesCollection
+        app.get("/teamsInfo/:id", async (req, res) => {
+          const id = req.params.id;
+          const query = { _id: ObjectId(id) };
+          const blog = await teamsInfoCollection.findOne(query);
+          res.json(blog);
+        });
+     */
     // ................ Teams info api end .............. //
 
 
 
     // ................ Courses api start .............. //
 
-    // course get data 
-    app.get('/courses', async (req, res) => {
-      const cursor = coursesCollection.find({});
-
-      const result = await cursor.toArray();
-      res.json(result);
-    });
-
-    //GET Single course
-    app.get("/courses/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const blog = await coursesCollection.findOne(query);
-      res.json(blog);
-    });
+    /*  // course get data 
+     app.get('/courses', async (req, res) => {
+       const cursor = coursesCollection.find({});
+ 
+       const result = await cursor.toArray();
+       res.json(result);
+     });
+ 
+     //GET Single course
+     app.get("/courses/:id", async (req, res) => {
+       const id = req.params.id;
+       const query = { _id: ObjectId(id) };
+       const blog = await coursesCollection.findOne(query);
+       res.json(blog);
+     }); */
 
     // ................ Courses api end .............. //
 
