@@ -295,43 +295,43 @@ async function run() {
 
 
     // ................ Flight api start .............. //
-    /* 
-        // Get flight data
-        app.get("/flight", async (req, res) => {
-          const cursor = flightCollection.find({});
-          const flight = await cursor.toArray();
-          res.json(flight);
-        });
-    
-        // get the filter flight data
-        app.get("/filterFlight", async (req, res) => {
-          const cursor = flightCollection.find({});
-          const flight = await cursor.toArray();
-          res.json(flight);
-        });
-    
-        // get the flight data
-        app.get("/filter", async (req, res) => {
-          const cursor = flightCollection.find({});
-          const flight = await cursor.toArray();
-          res.json(flight);
-        });
-    
-        // filter by from to
-        app.post("/filter", async (req, res) => {
-          const query = req.body;
-          const result = await flightCollection.find(query).toArray();
-          res.json(result);
-        });
-    
-        // Get Flight by ID
-        app.get('/flight/:id', async (req, res) => {
-          const id = req.params.id;
-          const query = { _id: ObjectId(id) };
-          const flight = await flightCollection.findOne(query);
-          res.json(flight);
-        });
-     */
+
+    // Get flight data
+    app.get("/flight", async (req, res) => {
+      const cursor = flightCollection.find({});
+      const flight = await cursor.toArray();
+      res.json(flight);
+    });
+
+    // get the filter flight data
+    app.get("/filterFlight", async (req, res) => {
+      const cursor = flightCollection.find({});
+      const flight = await cursor.toArray();
+      res.json(flight);
+    });
+
+    // get the flight data
+    app.get("/filter", async (req, res) => {
+      const cursor = flightCollection.find({});
+      const flight = await cursor.toArray();
+      res.json(flight);
+    });
+
+    // filter by from to
+    app.post("/filter", async (req, res) => {
+      const query = req.body;
+      const result = await flightCollection.find(query).toArray();
+      res.json(result);
+    });
+
+    // Get Flight by ID
+    app.get('/flight/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const flight = await flightCollection.findOne(query);
+      res.json(flight);
+    });
+
 
     // ................ Flight api end .............. //
 
