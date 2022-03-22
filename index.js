@@ -40,7 +40,7 @@ async function run() {
         const coursesCollection = database.collection("courses");
         const subscribesCollection = database.collection("subscribes");
 
-// ................ blog api start .............. //
+        // ................ blog api start .............. //
 
         //GET blogs API
         app.get('/blogs', async (req, res) => {
@@ -107,11 +107,11 @@ async function run() {
             console.log(result);
         });
 
-// ................ blog api end .............. //
+        // ................ blog api end .............. //
 
 
 
-// ................ users api start .............. //
+        // ................ users api start .............. //
 
         // GET - All users
         app.get("/users", async (req, res) => {
@@ -193,11 +193,11 @@ async function run() {
             res.json(result);
         });
 
-// ................ users api end .............. //
+        // ................ users api end .............. //
 
 
 
-// ................ Tourpackage api start .............. //
+        // ................ Tourpackage api start .............. //
 
         // GET tourPackages API
         app.get('/tourPackages', async (req, res) => {
@@ -213,7 +213,7 @@ async function run() {
             const tourPackage = await tourCollection.findOne(query);
             res.json(tourPackage);
         });
-        
+
         // POST package order API
         app.post('/tourPackages', async (req, res) => {
             const product = req.body;
@@ -221,11 +221,40 @@ async function run() {
             res.json(result);
         });
 
-// ................ Tourpackage api end .............. //
+
+        // Delete - Delete an user from DB
+        app.delete("/tourPackages/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await tourCollection.deleteOne(query);
+            res.json({ _id: id, deletedCount: result.deletedCount });
+        });
+
+        app.put('/tourPackages/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedPackage = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    images: updatedPackage.images,
+                    title: updatedPackage.title,
+                    price: updatedPackage.price,
+                    category: updatedPackage.category,
+                    person: updatedPackage.person,
+                    date: updatedPackage.date
+                },
+            };
+            const result = await tourCollection.updateOne(filter, updateDoc, options)
+            console.log('updating user', req);
+            res.json(result)
+        })
+
+        // ................ Tourpackage api end .............. //
 
 
 
-// ................ Order api start .............. //
+        // ................ Order api start .............. //
 
         // POST Order API
         app.post('/orders', async (req, res) => {
@@ -260,18 +289,18 @@ async function run() {
             const updateDoc = {
                 $set: {
                     payment: payment
-                    }
-                };
-                const result = await ordersCollection.updateOne(filter, updateDoc);
-                res.json(result);
-        
+                }
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+
         });
 
-// ................ Order api end .............. //
+        // ................ Order api end .............. //
 
 
 
-// ................ Flight api start .............. //
+        // ................ Flight api start .............. //
 
         // Get flight data
         app.get("/flight", async (req, res) => {
@@ -300,7 +329,7 @@ async function run() {
             const result = await flightCollection.find(query).toArray();
             res.json(result);
         });
-        
+
         // Get Flight by ID
         app.get('/flight/:id', async (req, res) => {
             const id = req.params.id;
@@ -308,13 +337,13 @@ async function run() {
             const flight = await flightCollection.findOne(query);
             res.json(flight);
         });
-        
-
-// ................ Flight api end .............. //
 
 
+        // ................ Flight api end .............. //
 
-// ................ comment api start .............. //
+
+
+        // ................ comment api start .............. //
 
         //GET comment api
         app.get("/comments", async (req, res) => {
@@ -338,11 +367,11 @@ async function run() {
             res.json(result);
         });
 
-// ................ comment api end .............. //
+        // ................ comment api end .............. //
 
 
 
-// ................ Review api start .............. //
+        // ................ Review api start .............. //
 
         // get Ratings by users //
         app.get('/reviews', async (req, res) => {
@@ -361,11 +390,11 @@ async function run() {
             res.send(result);
         });
 
-// ................ Review api end .............. //
+        // ................ Review api end .............. //
 
 
 
-// ................ Services api start .............. //
+        // ................ Services api start .............. //
 
         // GET services API
         app.get('/services', async (req, res) => {
@@ -382,11 +411,11 @@ async function run() {
             res.json(service);
         });
 
-// ................ Services api end .............. //
+        // ................ Services api end .............. //
 
 
 
-// ................ Teams info api start .............. //
+        // ................ Teams info api start .............. //
 
         // team details get data
         app.get('/teamsInfo', async (req, res) => {
@@ -404,11 +433,11 @@ async function run() {
             res.json(blog);
         });
 
-// ................ Teams info api end .............. //
+        // ................ Teams info api end .............. //
 
 
 
-// ................ Courses api start .............. //
+        // ................ Courses api start .............. //
 
         // course get data 
         app.get('/courses', async (req, res) => {
@@ -426,32 +455,32 @@ async function run() {
             res.json(blog);
         });
 
-// ................ Courses api end .............. //
+        // ................ Courses api end .............. //
 
 
 
-// ................ Subscribes api start .............. //
+        // ................ Subscribes api start .............. //
 
-    // subscribes get data 
-    app.get('/subscribes', async (req, res) => {
-        const cursor = subscribesCollection.find({});
+        // subscribes get data 
+        app.get('/subscribes', async (req, res) => {
+            const cursor = subscribesCollection.find({});
 
-        const result = await cursor.toArray();
-        res.json(result);
-    });
+            const result = await cursor.toArray();
+            res.json(result);
+        });
 
-    // subscribes poist data 
-    app.post('/subscribes', async (req, res) => {
-        const data = req.body;
-        const result = await subscribesCollection.insertOne(data);
-        res.send(result);
-    });
+        // subscribes poist data 
+        app.post('/subscribes', async (req, res) => {
+            const data = req.body;
+            const result = await subscribesCollection.insertOne(data);
+            res.send(result);
+        });
 
-// ................ Subscribes api end .............. //
+        // ................ Subscribes api end .............. //
 
 
 
-// ................ Payment stripe api start .............. //
+        // ................ Payment stripe api start .............. //
 
         // GET For Payment 
         app.get('/booked:/id', async (req, res) => {
@@ -476,7 +505,7 @@ async function run() {
             });
         });
 
-// ................ Payment stripe api end .............. //   
+        // ................ Payment stripe api end .............. //   
 
     } finally {
         // await client.close();
