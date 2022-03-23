@@ -65,6 +65,7 @@ async function run() {
 
     // ................ blog api start .............. //
 
+
     //GET blogs API
     app.get('/blogs', async (req, res) => {
       const cursor = blogsCollection.find({});
@@ -102,33 +103,32 @@ async function run() {
     });
 
     //DELETE Blog API
-    app.delete('/blogs/:id', async (req, res) => {
+    app.delete("/blogs/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await blogsCollection.deleteOne(query);
-      console.log('deleting blog with id ', result);
-      res.json(result);
+      res.json({ _id: id, deletedCount: result.deletedCount });
     });
 
     //UPDATE Blog API
-    app.put("/blogs/:id", async (req, res) => {
-      const filter = { _id: ObjectId(req.params.id) };
-      console.log(req.params.id);
-      const result = await blogsCollection.updateMany(filter, {
-        $set: {
-          title: req.body.title,
-          fullTitle: req.body.fullTitle,
-          info: req.body.info,
-          description: req.body.description,
-          quote: req.body.quote,
-          quoteName: req.body.quoteName,
-          tag1: req.body.tag1,
-          tag2: req.body.tag2,
-        },
-      });
-      res.send(result);
-      console.log(result);
-    });
+    app.put('/blogs/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedBlogs = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+          $set: {
+              img: updatedPackage.img,
+              title: updatedBlogs.title,
+              info: updatedBlogs.info,
+              description: updatedBlogs.description,
+              tag1: updatedBlogs.tag1,
+              tag2: updatedBlogs.tag2,
+          },
+      };
+      const result = await blogsCollection.updateOne(filter, updateDoc, options)
+      res.json(result)
+  })
 
     // ................ blog api end .............. //
 
