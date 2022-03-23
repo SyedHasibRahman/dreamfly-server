@@ -235,6 +235,7 @@ async function run() {
             console.log(result);
             res.json(result);
         });
+        
         // GET Order API
         app.get('/myorders', async (req, res) => {
             const email = req.query.email;
@@ -413,7 +414,6 @@ async function run() {
         // course get data 
         app.get('/courses', async (req, res) => {
             const cursor = coursesCollection.find({});
-
             const result = await cursor.toArray();
             res.json(result);
         });
@@ -422,8 +422,8 @@ async function run() {
         app.get("/courses/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const blog = await coursesCollection.findOne(query);
-            res.json(blog);
+            const course = await coursesCollection.findOne(query);
+            res.json(course);
         });
 
 // ................ Courses api end .............. //
