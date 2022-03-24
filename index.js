@@ -96,39 +96,24 @@ async function run() {
     });
 
     //POST Blogs API
-    app.post('/blogs', async (req, res) => {
-      const blogs = req.body;
-      const result = await blogsCollection.insertOne(blogs);
-      res.json(result);
-    });
-
-    //DELETE Blog API
-    app.delete("/blogs/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const result = await blogsCollection.deleteOne(query);
-      res.json({ _id: id, deletedCount: result.deletedCount });
-    });
-
-    //UPDATE Blog API
     app.put('/blogs/:id', async (req, res) => {
       const id = req.params.id;
-      const updatedBlogs = req.body;
+      const updateBlog = req.body;
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
           $set: {
-              img: updatedPackage.img,
-              title: updatedBlogs.title,
-              info: updatedBlogs.info,
-              description: updatedBlogs.description,
-              tag1: updatedBlogs.tag1,
-              tag2: updatedBlogs.tag2,
+              img: updateBlog.img,
+              title: updateBlog.title,
+              info: updateBlog.info,
+              description: updateBlog.description,
+              tag1: updateBlog.tag1,
+              tag2: updateBlog.tag2
           },
       };
-      const result = await blogsCollection.updateOne(filter, updateDoc, options)
-      res.json(result)
-  })
+      const result = await blogsCollection.updateOne(filter, updateDoc, options);
+      res.json(result);
+    });
 
     // ................ blog api end .............. //
 
