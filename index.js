@@ -102,14 +102,14 @@ async function run() {
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
-          $set: {
-              img: updateBlog.img,
-              title: updateBlog.title,
-              info: updateBlog.info,
-              description: updateBlog.description,
-              tag1: updateBlog.tag1,
-              tag2: updateBlog.tag2
-          },
+        $set: {
+          img: updateBlog.img,
+          title: updateBlog.title,
+          info: updateBlog.info,
+          description: updateBlog.description,
+          tag1: updateBlog.tag1,
+          tag2: updateBlog.tag2
+        },
       };
       const result = await blogsCollection.updateOne(filter, updateDoc, options);
       res.json(result);
@@ -230,32 +230,32 @@ async function run() {
     });
 
 
-      // Delete - Delete an user from DB
-      app.delete("/tourPackages/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: ObjectId(id) };
-        const result = await tourCollection.deleteOne(query);
-        res.json({ _id: id, deletedCount: result.deletedCount });
+    // Delete - Delete an user from DB
+    app.delete("/tourPackages/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await tourCollection.deleteOne(query);
+      res.json({ _id: id, deletedCount: result.deletedCount });
     });
 
     app.put('/tourPackages/:id', async (req, res) => {
-        const id = req.params.id;
-        const updatedPackage = req.body;
-        const filter = { _id: ObjectId(id) };
-        const options = { upsert: true };
-        const updateDoc = {
-            $set: {
-                images: updatedPackage.images,
-                title: updatedPackage.title,
-                price: updatedPackage.price,
-                category: updatedPackage.category,
-                person: updatedPackage.person,
-                date: updatedPackage.date
-            },
-        };
-        const result = await tourCollection.updateOne(filter, updateDoc, options)
-        console.log('updating user', req);
-        res.json(result)
+      const id = req.params.id;
+      const updatedPackage = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          images: updatedPackage.images,
+          title: updatedPackage.title,
+          price: updatedPackage.price,
+          category: updatedPackage.category,
+          person: updatedPackage.person,
+          date: updatedPackage.date
+        },
+      };
+      const result = await tourCollection.updateOne(filter, updateDoc, options)
+      console.log('updating user', req);
+      res.json(result)
     })
 
     // ................ Tourpackage api end .............. //
