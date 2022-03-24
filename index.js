@@ -65,6 +65,7 @@ async function run() {
 
     // ................ blog api start .............. //
 
+
     //GET blogs API
     app.get('/blogs', async (req, res) => {
       const cursor = blogsCollection.find({});
@@ -95,39 +96,23 @@ async function run() {
     });
 
     //POST Blogs API
-    app.post('/blogs', async (req, res) => {
-      const blogs = req.body;
-      const result = await blogsCollection.insertOne(blogs);
-      res.json(result);
-    });
-
-    //DELETE Blog API
-    app.delete('/blogs/:id', async (req, res) => {
+    app.put('/blogs/:id', async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const result = await blogsCollection.deleteOne(query);
-      console.log('deleting blog with id ', result);
+      const updateBlog = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+          $set: {
+              img: updateBlog.img,
+              title: updateBlog.title,
+              info: updateBlog.info,
+              description: updateBlog.description,
+              tag1: updateBlog.tag1,
+              tag2: updateBlog.tag2
+          },
+      };
+      const result = await blogsCollection.updateOne(filter, updateDoc, options);
       res.json(result);
-    });
-
-    //UPDATE Blog API
-    app.put("/blogs/:id", async (req, res) => {
-      const filter = { _id: ObjectId(req.params.id) };
-      console.log(req.params.id);
-      const result = await blogsCollection.updateMany(filter, {
-        $set: {
-          title: req.body.title,
-          fullTitle: req.body.fullTitle,
-          info: req.body.info,
-          description: req.body.description,
-          quote: req.body.quote,
-          quoteName: req.body.quoteName,
-          tag1: req.body.tag1,
-          tag2: req.body.tag2,
-        },
-      });
-      res.send(result);
-      console.log(result);
     });
 
     // ................ blog api end .............. //
@@ -243,6 +228,35 @@ async function run() {
       const result = await tourCollection.insertOne(product);
       res.json(result);
     });
+
+
+      // Delete - Delete an user from DB
+      app.delete("/tourPackages/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await tourCollection.deleteOne(query);
+        res.json({ _id: id, deletedCount: result.deletedCount });
+    });
+
+    app.put('/tourPackages/:id', async (req, res) => {
+        const id = req.params.id;
+        const updatedPackage = req.body;
+        const filter = { _id: ObjectId(id) };
+        const options = { upsert: true };
+        const updateDoc = {
+            $set: {
+                images: updatedPackage.images,
+                title: updatedPackage.title,
+                price: updatedPackage.price,
+                category: updatedPackage.category,
+                person: updatedPackage.person,
+                date: updatedPackage.date
+            },
+        };
+        const result = await tourCollection.updateOne(filter, updateDoc, options)
+        console.log('updating user', req);
+        res.json(result)
+    })
 
     // ................ Tourpackage api end .............. //
 
